@@ -437,16 +437,18 @@ class VideoDataset(Dataset):
             )
 
         imgs = []
+        impath = []
         for index in indices:
             img_path = img_paths[int(index)]
             img = read_image(img_path)
             if self.transform is not None:
                 img = self.transform(img)
-            img = img.unsqueeze(0) # img must be torch.Tensor
+            img = img.unsqueeze(0)  # img must be torch.Tensor
+            impath.append(img_path)
             imgs.append(img)
         imgs = torch.cat(imgs, dim=0)
 
-        item = {'img': imgs, 'pid': pid, 'camid': camid, 'dsetid': dsetid}
+        item = {'img': imgs, 'pid': pid, 'camid': camid, 'dsetid': dsetid, 'impath': impath}
 
         return item
 
