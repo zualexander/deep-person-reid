@@ -101,8 +101,10 @@ def visactmap(
                 am = 255 * (am - np.min(am)) / (
                         np.max(am) - np.min(am) + 1e-12
                 )
+                # todo set to zero if < ??
                 am = np.uint8(np.floor(am))
-                am = cv2.applyColorMap(am, cv2.COLORMAP_JET)
+                am[am < 64] = 0
+                am = cv2.applyColorMap(am, cv2.COLORMAP_HOT)
 
                 # overlapped
                 overlapped = img_np * 0.3 + am * 0.7

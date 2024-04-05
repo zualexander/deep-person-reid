@@ -321,7 +321,7 @@ class Engine(object):
             print('##### Evaluating {} ({}) #####'.format(name, domain))
             query_loader = self.test_loader[name]['query']
             gallery_loader = self.test_loader[name]['gallery']
-            rank1, mAP = self._evaluate(
+            rank1, mAP, all_ap, all_cms = self._evaluate(
                 dataset_name=name,
                 query_loader=query_loader,
                 gallery_loader=gallery_loader,
@@ -335,6 +335,10 @@ class Engine(object):
                 rerank=rerank
             )
 
+            print(rank1)
+            print(mAP)
+            print(all_ap)
+            print(all_cms)
             if self.writer is not None:
                 self.writer.add_scalar(f'Test/{name}/rank1', rank1, self.epoch)
                 self.writer.add_scalar(f'Test/{name}/mAP', mAP, self.epoch)
@@ -404,7 +408,7 @@ class Engine(object):
             distmat = re_ranking(distmat, distmat_qq, distmat_gg)
 
         print('Computing CMC and mAP ...')
-        cmc, mAP = metrics.evaluate_rank(
+        cmc, mAP, all_ap, all_cmc = metrics.evaluate_rank(
             distmat,
             q_pids,
             g_pids,
@@ -430,7 +434,7 @@ class Engine(object):
                 topk=visrank_topk
             )
 
-        return cmc[0], mAP
+        return cmc[0], mAP, all_ap, all_cmc
 
     def compute_loss(self, criterion, outputs, targets):
         if isinstance(outputs, (tuple, list)):

@@ -325,6 +325,7 @@ class ImageDataset(Dataset):
 
     def __getitem__(self, index):
         img_path, pid, camid, dsetid = self.data[index]
+        img_path = img_path[0]
         img = read_image(img_path)
         if self.transform is not None:
             img = self._transform_image(self.transform, self.k_tfm, img)
