@@ -1,7 +1,9 @@
 from __future__ import division, print_function, absolute_import
-import numpy as np
+
 import warnings
 from collections import defaultdict
+
+import numpy as np
 
 try:
     from torchreid.metrics.rank_cylib.rank_cy import evaluate_cy
@@ -84,13 +86,16 @@ def eval_cuhk03(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
         num_valid_q += 1.
 
     assert num_valid_q > 0, 'Error: all query identities do not appear in gallery'
+    print("num_valid_q", num_valid_q)
+    print("num_ap", len(all_AP))
+    print("num_cmc", len(all_AP))
 
-    #  @todo: check what todo to get a distribution
     all_cmc = np.asarray(all_cmc).astype(np.float32)
+    ret_cmc = all_cmc.copy().flatten()
     all_cmc = all_cmc.sum(0) / num_valid_q
     mAP = np.mean(all_AP)
 
-    return all_cmc, mAP, all_AP, all_cmc
+    return all_cmc, mAP, all_AP, ret_cmc
 
 
 def eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
@@ -147,12 +152,14 @@ def eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
         all_AP.append(AP)
 
     assert num_valid_q > 0, 'Error: all query identities do not appear in gallery'
+    print("num_valid_q", num_valid_q)
 
     all_cmc = np.asarray(all_cmc).astype(np.float32)
+    ret_cmc = all_cmc.copy().flatten()
     all_cmc = all_cmc.sum(0) / num_valid_q
     mAP = np.mean(all_AP)
 
-    return all_cmc, mAP, all_AP, all_cmc
+    return all_cmc, mAP, all_AP, ret_cmc
 
 
 def evaluate_py(
@@ -174,7 +181,7 @@ def evaluate_rank(
         g_pids,
         q_camids,
         g_camids,
-        max_rank=50,
+        max_rank=1,
         use_metric_cuhk03=False,
         use_cython=True
 ):
