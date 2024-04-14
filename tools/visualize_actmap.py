@@ -103,7 +103,7 @@ def visactmap(
                 )
                 # todo set to zero if < ??
                 am = np.uint8(np.floor(am))
-                am[am < 64] = 0
+                am[am < 128] = 0
                 am = cv2.applyColorMap(am, cv2.COLORMAP_HOT)
 
                 # overlapped

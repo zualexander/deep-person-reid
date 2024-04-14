@@ -181,7 +181,7 @@ def evaluate_rank(
         g_pids,
         q_camids,
         g_camids,
-        max_rank=1,
+        max_rank=20,
         use_metric_cuhk03=False,
         use_cython=True
 ):
