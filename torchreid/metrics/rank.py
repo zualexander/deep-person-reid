@@ -49,6 +49,7 @@ def eval_cuhk03(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
         order = indices[q_idx]
         remove = (g_pids[order] == q_pid) & (g_camids[order] == q_camid)
         keep = np.invert(remove)
+        keep = np.ones(len(order), dtype=bool)
 
         # compute cmc curve
         raw_cmc = matches[q_idx][
@@ -86,14 +87,14 @@ def eval_cuhk03(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
         num_valid_q += 1.
 
     assert num_valid_q > 0, 'Error: all query identities do not appear in gallery'
-    print("num_valid_q", num_valid_q)
-    print("num_ap", len(all_AP))
-    print("num_cmc", len(all_AP))
 
     all_cmc = np.asarray(all_cmc).astype(np.float32)
-    ret_cmc = all_cmc.copy().flatten()
+    ret_cmc = all_cmc.copy()[:, 0].flatten()
     all_cmc = all_cmc.sum(0) / num_valid_q
     mAP = np.mean(all_AP)
+    print("num_valid_q", num_valid_q)
+    print("num_ap", len(all_AP))
+    print("num_cmc", len(ret_cmc))
 
     return all_cmc, mAP, all_AP, ret_cmc
 
@@ -155,9 +156,13 @@ def eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
     print("num_valid_q", num_valid_q)
 
     all_cmc = np.asarray(all_cmc).astype(np.float32)
-    ret_cmc = all_cmc.copy().flatten()
+    ret_cmc = all_cmc.copy()[:, 0].flatten()
     all_cmc = all_cmc.sum(0) / num_valid_q
     mAP = np.mean(all_AP)
+
+    print("num_valid_q", num_valid_q)
+    print("num_ap", len(all_AP))
+    print("num_cmc", len(ret_cmc))
 
     return all_cmc, mAP, all_AP, ret_cmc
 

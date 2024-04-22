@@ -338,7 +338,7 @@ class Engine(object):
             print(rank1)
             print(mAP)
             print(all_ap)
-            print(all_cms)
+            print(np.asarray(all_cms))
             if self.writer is not None:
                 self.writer.add_scalar(f'Test/{name}/rank1', rank1, self.epoch)
                 self.writer.add_scalar(f'Test/{name}/mAP', mAP, self.epoch)
